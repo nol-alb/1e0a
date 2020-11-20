@@ -41,7 +41,7 @@ plt.ylabel("Amplitude")
 
 
 
-![png](output_3_1.png)
+![png](https://github.com/nol-alb/1e0a/blob/main/Images/Assessment/output_3_1.png)
 
 
 
@@ -58,7 +58,7 @@ plt.vlines(onset_frames, 0, 1, color='r',linestyle='solid', label='Onsets')
 
 
 
-![png](output_4_1.png)
+![png](https://github.com/nol-alb/1e0a/blob/main/Images/Assessment/output_4_1.png)
 
 
 ### Inter Onset Interval User
@@ -150,7 +150,7 @@ plt.ylabel("Amplitude")
 
 
 
-![png](output_10_1.png)
+![png](https://github.com/nol-alb/1e0a/blob/main/Images/Assessment/output_10_1.png)
 
 
 ### Inter Onset Interval Generated Pattern
@@ -233,7 +233,7 @@ plt.ylabel("Deviation degree")
 
 
 
-![png](output_18_1.png)
+![png](https://github.com/nol-alb/1e0a/blob/main/Images/Assessment/output_18_1.png)
 
 
 
