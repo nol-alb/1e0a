@@ -36,7 +36,7 @@ plt.ylabel("Amplitude")
 
 
 
-![png](output_2_1.png)
+![png](https://github.com/nol-alb/1e0a/blob/main/Images/output_2_1.png)
 
 
 ## Rectification
@@ -58,7 +58,7 @@ plt.ylabel("Amplitude")
 
 
 
-![png](output_4_1.png)
+![png](https://github.com/nol-alb/1e0a/blob/main/Images/output_4_1.png)
 
 
 
