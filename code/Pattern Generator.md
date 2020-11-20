@@ -75,7 +75,7 @@ plt.ylabel("Amplitude")
 
 
 
-![png](output_3_1.png)
+![png](https://github.com/nol-alb/1e0a/blob/main/Images/output_3_1.png)
 
 
 ### Convolution Function
@@ -103,7 +103,7 @@ plt.ylabel("Amplitude")
 
 
 
-![png](output_5_1.png)
+![png](https://github.com/nol-alb/1e0a/blob/main/Images/output_5_1.png)
 
 
 
