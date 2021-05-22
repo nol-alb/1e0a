@@ -1,0 +1,123 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <style type="text/css">
+            body {
+                background-color: #0e153a;
+            }
+            h1  {
+                color: #c3c6c7;
+                padding-top: 20px;
+                text-align: center;
+                font-family: Georgia, 'Times New Roman', Times, serif
+            }
+            h3 {
+                color: #c3c6c7;
+                font-weight: bold;
+                font-size: 1.875em;
+                font-family: Georgia, 'Times New Roman', Times, serif
+            }
+            p {
+                font-size: 1.5em;
+                color: #c3c6c7;
+            }
+            .card {
+                margin-top: 20px;
+                margin-bottom: 10px;
+                padding-bottom: 10px;
+                border: white solid 1px;
+                border-radius: 10px; 
+            }
+            input[type="text"] {
+                margin-bottom: 10px;
+                font-size: 1.5em;
+            }
+            .btn {
+                background-color:#fc5185; 
+                font-size: 1.5em; 
+                color:black;
+                padding-bottom: 10px;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <div class="container-fluid">
+            <header>
+                <h1>1e0a</h1>
+            </header>
+            <div class="card col-md-6 col-md-offset-3">
+
+            <div align ="left">
+                <h3>Some Instructions</h3>
+                <li>
+                    The preferred device to access this application is a desktop/laptop for ideal results.
+                </li>
+                <li>
+                    Ignore the accents when you perform your recording as the accents are present only for your understanding of the cycle length.
+                </li>
+                <li>
+                    Please use percussion instruments only apart from clapping, snapping fingers or tapping
+                </li>
+                <li>
+                    Kindly use the same instrument/rhythm interface and experimental setup for consistent results. For example, if you are clapping (or playing any percussion instrument),
+                     please continue to clap (or use the same percussion instrument) throughout the course of all assessments. 
+                </li>
+                <li>
+                    Wait a few seconds after you hit record to begin playing the pattern.
+                </li>
+            </div>
+            </div>
+
+            <div class="card col-md-6 col-md-offset-3">
+                <div style="text-align:center;">
+                    <h3>Play The Pattern</h3>
+                </div>
+                <div style="text-align:center;">
+                    <p>Kindly listen and pay attention to the pattern  {{ pattern }} being played {{ name }}.</p>
+                    <p> You have reached pattern {{ cntr }}/23 to complete this experiment.</p></p>
+                
+                    <audio controls src= "{{ songout }}" type="audio/wav"></audio>
+                </div>
+            </div>
+            <div class="card col-md-6 col-md-offset-3">
+                <div style="text-align:center;">
+                    <h3>Record Your Pattern</h3>
+                </div>
+                <div style="text-align:center;">
+                    <p>Tap this rhythm pattern and record then click Stop, click upload. Only after you have uploaded can you do the performance analysis</p>
+                       <div id="controls">
+                         <button id="recordButton">Record</button>
+                         <button id="pauseButton" disabled>Pause</button>
+                         <button id="stopButton" disabled>Stop</button>
+                        </div>
+                        <div id="formats">Format: start recording to see sample rate</div>
+                        <p><strong>Recordings:</strong></p>
+                        <ol id="recordingsList"></ol>
+                </div>
+            </div>
+            <div class="col-md-12" style="text-align:center;">
+            <a class="btn btn-primary">
+            <form method="post">
+               <input type="submit" value="Analyze" >
+            </form>
+            </a>
+        </div>
+        {% if isExist==False %}
+        <script>
+            alert("You forgot to hit upload!")
+        </script>
+        {% endif %}
+
+        </div>
+        <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>
+        <script src="/static/js/app.js"></script>       
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    </body>
+</html>
+{% endblock %}

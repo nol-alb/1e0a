@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+
+
+
+
+
+{% block body %}
+{% for users in users %}
+    <h2>
+      {{ users.Name }}
+    </h2>
+    <p>
+      <b>Years Of Experience</b>: {{ users.yrsofexp }}
+    </p>
+    <p>
+      <b>Instrument</b>: {{ users.IfyeswhichInstrument }}
+    </p>
+    <p>
+      <b>Cycle</b>: {{ users.Cycle }}
+    </p>
+    <p>
+      <b>Pattern</b>: {{ users.Pattern }}
+    </p>
+{% endfor %}
+{% endblock %}

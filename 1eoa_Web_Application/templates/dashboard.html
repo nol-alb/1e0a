@@ -1,0 +1,98 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <style type="text/css">
+            body {
+                background-color: #0e153a;
+            }
+            h1  {
+                color: #c3c6c7;
+                padding-top: 20px;
+                text-align: center;
+                font-family: Georgia, 'Times New Roman', Times, serif
+            }
+            h3 {
+                color: #c3c6c7;
+                font-weight: bold;
+                font-size: 1.875em;
+                font-family: Georgia, 'Times New Roman', Times, serif
+            }
+            p {
+                font-size: 1.5em;
+                color: #c3c6c7;
+            }
+            .card {
+                margin-top: 20px;
+                margin-bottom: 100px;
+                padding-bottom: 5px;
+                border: white solid 10px;
+                border-radius: 20px; 
+            }
+            input[type="text"] {
+                margin-bottom: 10px;
+                font-size: 1.5em;
+            }
+            .btn {
+                background-color:#fc5185; 
+                font-size: 1.5em; 
+                color:black;
+                padding-bottom: 10px;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        </p>
+        <div class="container-fluid">
+            <header>
+                <h1>1e0a Performance Dashboard</h1>
+                <p>The results you see here are a graphical representation of your performance for the given pattern, A negative percentage (Below Zero Line) 
+                    infers that your performance was slowler than the intended timing of the pattern. Similarly a positive percentage (Above Zero Line) infers that your performance was faster than the intended timing of the pattern.
+                </p>
+                <p> </p> 
+                <p> 
+                We have two plots to determine your performance within the pattern and accross each repeats of the pattern. Having an error percentage 
+                    within the threshold of -10 to 10 is an acceptable human error.
+            </header>
+            <div class="card col-md-6 col-md-offset-3">
+                <div style="text-align:center;">
+                    <h3>Performance</h3>
+                    <img src='{{ outPath }}' alt="Error Mapping" style="width:420px;height:300px">
+
+
+                </div>
+            </div>
+        <script src="https://cdn.rawgit.com/mattdiamond/Recorderjs/08e7abd9/dist/recorder.js"></script>     
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    </body>
+
+    {% if n==1 %}
+        <div class="col-md-12" style="text-align:center;">
+            <a class="btn btn-primary">
+                <p>WELL DONE!!</p>
+            <form method="post">
+               <input type="submit" value="Learn Another" >
+            </form>
+            </a>
+        </div>
+    {% endif %}
+    {% if n==0 %}
+        <div class="col-md-12" style="text-align:center;">
+            <a class="btn btn-primary">
+            <form method="post">
+               <input type="submit" value="Redo" >
+            </form>
+            </a>
+        </div>
+    {% endif %}
+
+                <div class="col-md-12" style="text-align:center;">
+                <a class="btn btn-primary" href="/home" role="button">LogOut</a>
+        </div>
+</html>
+{% endblock %}
