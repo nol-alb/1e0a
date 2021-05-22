@@ -6,5 +6,5 @@
 ![alt text](https://github.com/nol-alb/1e0a/blob/main/flow/flow.png)
 
  This system consists of two distinct blocks: 
- (1) The rhythm pattern generator with the complexity metric \\
+ (1) The rhythm pattern generator with the complexity metric
  (2) the performance assessment of the learner input with feedback.
