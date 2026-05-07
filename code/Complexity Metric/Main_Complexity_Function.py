@@ -13,57 +13,55 @@ def complexity_of_cycle(n):
         lensarr , lensdict = CAF.lendic(j)
         eledict = CAF.eledic(j)
         Hmax = CAF.Hmax_gen(eledict, lensdict, j)
+        # Paper: H_joint = H(X₁) + H(Y₁|X₁) + H(X₂|X₁,Y₁) + H(Y₂|X₁,Y₁,X₂)
+        # H(Y₂|X₁,Y₁,X₂) is structurally zero at level 1 (all lengths = 1)
+        # so it is omitted here without numerical consequence.
+        Hx = CAF.Hx_gen(eledict, j)
         lendicpro = CAF.lendic_hjoint(j,lensarr)
         pairs = CAF.All_pairs(j)
         Hxy, probx, probxy = CAF.Hse_len(eledict, lendicpro, lensarr,j)
         cprobxy = CAF.combined_probxy(probx, probxy,lendicpro, lensarr,eledict)
         Hxyx, probxyx = CAF.hselen_re1(eledict, lendicpro, pairs, lensarr, cprobxy)
-        Htotal = 0
-        Htotal = Hmax+ Hxy+Hxyx
+        Htotal = Hmax + Hx + Hxy + Hxyx   # FIX: was Hmax + Hxy + Hxyx
         
         return Htotal,j
         
     def complex_level_even(j):
         je, lensdic, eledic,lensarr,lensarrdic,k2,code = CAF.code_level_gen_even(j)
-        Hmax = CAF.Hmax_gen(eledic, lensarrdic, j)
+        # Hmax_gen normalises against the correct sequence length.
+        Hmax = CAF.Hmax_gen(eledic, lensarrdic, je)
+        Hx = CAF.Hx_gen(eledic, je)
         pairs = CAF.All_pairs(k2)
         Hxy, probx, probxy =CAF.Hse_len(eledic, lensdic, lensarr,je)
         cprobxy = CAF.combined_probxy(probx, probxy,lensdic, lensarr,eledic)
         Hxyx, probxyx =CAF.hselen_re_even(eledic, lensdic, pairs, lensarr, cprobxy,code)
         cprobxyx = CAF.combined_probxyx(cprobxy,probxyx,lensdic, lensarr,eledic)
-        Hxyxy, probxyxy = CAF.hselenre_len_even(cprobxyx,eledic, lensdic,pairs, lensarr,code)
-        Htotal = 0
-        Htotal = Hmax + Hxy + Hxyx + Hxyxy
+        Hxyxy, probxyxy = CAF.hselenre_len_even(cprobxyx,eledic, lensdic, pairs, lensarr,code)
+        Htotal = Hmax + Hx + Hxy + Hxyx + Hxyxy   
         
         return Htotal, je
 
     def complex_level_odd(j):
          jo, lensarr, eledic, lensarrdic,lensdic,k1,code=CAF.code_level_gen_odd(j)
-         Hmax = CAF.Hmax_gen(eledic, lensdic, j)
+         Hmax = CAF.Hmax_gen(eledic, lensdic, jo)
+         Hx = CAF.Hx_gen(eledic, jo)
          pairs = CAF.All_pairs(k1)
          Hxy, probx, probxy =CAF.Hse_len(eledic, lensarrdic, lensarr,jo)
          cprobxy = CAF.combined_probxy(probx, probxy,lensarrdic, lensarr,eledic)
          Hxyx, probxyx = CAF.hselen_re(eledic, lensarrdic, pairs, lensarr, cprobxy, code)
          cprobxyx = CAF.combined_probxyx(cprobxy,probxyx,lensarrdic, lensarr,eledic)
          Hxyxy, probxyxy = CAF.hselenre_len(cprobxyx,eledic, lensarrdic,pairs, lensarr, code)
-         Htotal = 0
-         Htotal = Hmax + Hxy + Hxyx + Hxyxy
+         Htotal = Hmax + Hx + Hxy + Hxyx + Hxyxy   # FIX: was Hmax + Hxy + Hxyx + Hxyxy
          return Htotal,jo
          
     def check_for_end(j,bin_arr,code_level,c):
-        if(code_level % 2) == 0:
+        if (code_level % 2) == 0:
             k = CAF.code_level_gen_even_check(j)
-            if(k[0] == bin_arr[c]):
-                code_level = 0
-            else:
-                code_level = code_level
-        elif(code_level % 2 ) != 0:
+        else:
             k = CAF.code_level_gen_odd_check(j)
-            if(k[0] == bin_arr[c]):
-                code_level =0
-            else:
-               code_level = code_level
-               
+
+        if ''.join(k) == bin_arr[c]:
+            return 0
         return code_level
          
     #cycle length
@@ -104,20 +102,20 @@ def complexity_of_cycle(n):
     return complexity
     
              
-def write_to_csv(i):
-    complexity = complexity_of_cycle(i)
+def write_to_csv(n):   
+    complexity = complexity_of_cycle(n)
     max_key = max(complexity, key=lambda k: complexity[k])
     bias = complexity[max_key]
-    o = str(i)
+    o = str(n)
     block = len(complexity)/2
     check_block = 0
-    for i in complexity:
-       if (complexity[i] ==0.0):
+    for key in complexity:   
+       if (complexity[key] ==0.0):
            continue
        if(check_block == block):
            break
        else:
-           complexity[i] = complexity[i] +bias
+           complexity[key] = complexity[key] + bias
            check_block = check_block+1
     complexity1 = dict(sorted(complexity.items(), key=lambda item: item[1]))
     with open('/Users/noelalben/Desktop/Proj2020/Main Proj File Codes/CSV_Complexity/compdict23'+o+'.csv', 'w') as csv_file:
@@ -132,8 +130,3 @@ def read_write_csv(i):
     with open(name) as f:
          d = dict(filter(None, csv.reader(f)))
     return d
-         
-
-            
-
-

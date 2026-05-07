@@ -20,86 +20,88 @@ def string_arr_gen(bin_arr,i):
     j = np.asarray(list(bin_arr[i]))
     return j
     
+# composite formation
+# group adjacent elements until an element TYPE (base char) already in the
+# current composite is encountered, then start a new composite.
 def code_level_gen_odd_check(j):
+    j = list(j)
     k = []
-    for i in range(0,len(j),2):
-      if(i ==len(j)-1):
-         k.append(j[i])
-      else:
-        j1 = j[i]+j[i+1]
-        k.append(j1)
-        j1 = str()
+    idx = 0
+    while idx < len(j):
+        composite_elems = []
+        seen_types = set()
+        while idx < len(j):
+            elem = j[idx]
+            elem_type = elem[0]          # base character type: '0' or '1'
+            if elem_type in seen_types:
+                break
+            seen_types.add(elem_type)
+            composite_elems.append(elem)
+            idx += 1
+        k.append(''.join(composite_elems))
     return k
 
 
+
 def code_level_gen_odd(j):
-    k = []
-    k1 = []
-    lensarr = []
-    lensdic = {}
-    eledic = {}
-    lensarrdic = {}
+    j = list(j)
+    k  = []   # composite element strings
+    k1 = []   # coded composite strings (letters from code dict)
+
     code = {}
-    for i in range(97,123):
+    for i in range(97, 123):
         code[str(chr(i))] = ''
-        
-    def get_key(val):
-      for key, value in code.items():
-         if val == value:
-               return key
-        
+
+    elem_to_letter = {}   # element string -> assigned letter (1-to-1 mapping)
     m = 97
-    for i in range(0,len(j),2):
-      if(i ==len(j)-1):
-         k.append(j[i])
-         code[str(chr(m))] = j[i]
-         j2 = get_key(j[i])
-         k1.append(j2)
-         lensarr.append(1);
-         m= m+1
-      else:
-        j1 = j[i]+j[i+1]
-        code[str(chr(m))] = j[i]
-        j2 = get_key(j[i])
-        m = m+1
-        code[str(chr(m))] = j[i+1]
-        m = m+1
-        j2 = j2+ get_key(j[i+1])
-        k.append(j1)
-        k1.append(j2)
-        j2 = str()
-        j1 = str()
-        if 2 in lensarr:
-            continue
-        lensarr.append(2)
-        
-        
-    for i in k:
-        eledic[i] = 0
-    for i in k:
-        eledic[i] = eledic[i]+1
-        
-    for i in eledic:
-        lensarrdic[i] = {}
-    for i in eledic:
-      for m in lensarr:
-        lensarrdic[i][m] = 0
-    for i in lensarr:
-            lensdic[i] = 0
-    for i in range(0,len(j),2):
-      if(i ==len(j)-1):
-         lensarrdic[j[i]][1] = lensarrdic[j[i]][1] +1
-         lensdic[1] = lensdic[1]+2
-      else:
-        j1 = j[i]+j[i+1]
-        lensarrdic[j1][2] = lensarrdic[j1][2] +1
-        lensdic[2] = lensdic[2]+1
-       
-        j1 = str()
-    
-    
-            
-    return k, lensarr, eledic, lensarrdic,lensdic,k1,code
+
+    def assign_code(elem):
+        nonlocal m
+        if elem not in elem_to_letter:
+            letter = str(chr(m))
+            elem_to_letter[elem] = letter
+            code[letter] = elem
+            m += 1
+        return elem_to_letter[elem]
+
+    idx = 0
+    while idx < len(j):
+        composite_elems = []
+        seen_types = set()
+        while idx < len(j):
+            elem = j[idx]
+            elem_type = elem[0]          # base character type
+            if elem_type in seen_types:
+                break
+            seen_types.add(elem_type)
+            composite_elems.append(elem)
+            idx += 1
+
+        comp_str    = ''.join(composite_elems)
+        comp_coded  = ''.join(assign_code(e) for e in composite_elems)
+        k.append(comp_str)
+        k1.append(comp_coded)
+
+    # Build statistics
+    lensarr = sorted(set(len(c) for c in k1))
+
+    eledic = {}
+    for comp in k:
+        eledic[comp] = eledic.get(comp, 0) + 1
+
+    lensarrdic = {}
+    for comp in eledic:
+        lensarrdic[comp] = {l: 0 for l in lensarr}
+
+    lensdic = {l: 0 for l in lensarr}
+
+    for comp_str, comp_coded in zip(k, k1):
+        l = len(comp_coded)
+        lensarrdic[comp_str][l] += 1   # FIX: was += 2 for singletons
+        lensdic[l]              += 1
+
+    return k, lensarr, eledic, lensarrdic, lensdic, k1, code
+
 
 def get_key(val):
      for key, value in code.items():
@@ -281,6 +283,7 @@ def eledic(j):
     for i in j:
       eledict[i] = eledict[i]+1
     return eledict
+
 def lendic_hjoint(j,lensarr):
     lendicpro ={}
     for i in j:
@@ -296,30 +299,41 @@ def lendic_hjoint(j,lensarr):
     return lendicpro
 
 
-
 def Hmax_gen(eledict, lensdict, j):
+    total_x = sum(eledict.values())
     probx = {}
     for i in eledict:
-          probx[i] = 0
-          probx[i] = eledict[i]/np.size(j)
+        probx[i] = eledict[i] / total_x
 
     Hx=0
     for i in probx:
-     Hx = Hx+(abs(probx[i]*np.log2(probx[i])))
+        if probx[i] > 0:
+            Hx = Hx + abs(probx[i] * np.log2(probx[i]))
 
+    total_y = sum(lensdict.values())
     proby = {}
     for i in lensdict:
-       proby[i] = lensdict[i]/np.size(j)
+        proby[i] = lensdict[i] / total_y
     
-             
     Hy = 0
     for i in lensdict:
-        if(proby[i]==0):
+        if proby[i] == 0:
            continue
-        Hy = Hy+ abs((proby[i]*np.log2(proby[i])))
+        Hy = Hy + abs(proby[i] * np.log2(proby[i]))
 
-    Hmax = 2*Hy+ 2*Hx
+    Hmax = 2*Hy + 2*Hx
     return Hmax
+
+
+def Hx_gen(eledict, j):
+    total = sum(eledict.values())
+    Hx = 0
+    for i in eledict:
+        p = eledict[i] / total
+        if p > 0:
+            Hx += abs(p * np.log2(p))
+    return Hx
+
 
 def All_pairs(j):
     pairs = []
@@ -624,6 +638,7 @@ def hselenre_len(cprobxyx,eledict, lensdict,pairs, lensarr, code):
                      Hxyxy = abs(Hxyxy + (cprobxyx[i][k][m]*np.log2(probxyxy[i][k][m][l])))
 
     return Hxyxy, probxyxy
+
 def hselenre_len_even(cprobxyx,eledict, lensdict,pairs, lensarr,code):
     numxyx={}
     for i in eledict:
@@ -692,4 +707,3 @@ def hselenre_len_even(cprobxyx,eledict, lensdict,pairs, lensarr,code):
                      Hxyxy = abs(Hxyxy + (cprobxyx[i][k][m]*np.log2(probxyxy[i][k][m][l])))
 
     return Hxyxy, probxyxy
-    
